@@ -89,6 +89,15 @@ const M: Meta = {
   ],
   deploy:
     'Vite 빌드(base: "./") 후 GitHub Actions(deploy.yml)가 main push 시 GitHub Pages로 자동 배포 → aebonlee.github.io/project16/',
+  scope: {
+    include: ['기분 선택 → 위로 한마디', '한 줄 마음에 답장·마음 저장함', 'AI 생성 + 키 없을 때 큐레이션 폴백'],
+    exclude: ['상담사 연결·실시간 채팅', '커뮤니티 공유', '음성 위로'],
+  },
+  pitch: [
+    '클릭 한 번으로 위로까지 도달하는 즉시성',
+    '자기 연민·감정 라벨링의 심리적 근거',
+    '기록은 브라우저에만 남는 "조용한 공간"',
+  ],
   stack: ['React 18', 'TypeScript', 'Vite', 'localStorage', 'OpenAI(선택)'],
 };
 
