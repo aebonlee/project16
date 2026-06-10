@@ -48,6 +48,47 @@ const M: Meta = {
     { title: '키 없이도 동작', body: 'AI 키가 없으면 감정별로 손질한 문구 풀에서 무작위로 골라 항상 응답합니다.' },
     { title: '프라이버시', body: '대화·저장 문장은 서버로 보내지 않고 브라우저에만 남습니다(키 입력 시에만 OpenAI로 전송).' },
   ],
+  targets: ['지친 하루에 위로가 필요한 사람', '누군가에게 털어놓기 부담스러운 사람', '혼자 마음을 다독이고 싶은 사람'],
+  goals: [
+    '기분을 고르면 클릭 한 번으로 맞춤 위로를 건넨다',
+    '한 줄 마음에 다정한 답을 돌려준다',
+    'API 키가 없어도 큐레이션 문구로 항상 응답한다',
+  ],
+  scenarios: [
+    '지금 기분을 한 번 눌러 위로 한마디를 받는다',
+    '오늘 있었던 일을 한 줄 적어 다정한 답을 받는다',
+    '마음에 닿은 문장을 저장해 힘들 때 다시 본다',
+  ],
+  screens: [
+    { name: '기분 선택', desc: '지침·슬픔·불안·외로움 등 6가지 기분 클릭 → 맞춤 위로' },
+    { name: '마음 한 줄', desc: '한 줄 적으면 채팅형으로 다정한 답장' },
+    { name: '마음 저장함', desc: '좋았던 문장을 저장·재열람' },
+  ],
+  pipelineDetail: [
+    { step: '기분 매칭', detail: '고른 기분에 맞는 위로/격려 후보 문장을 고른다.' },
+    { step: '생성 또는 큐레이션', detail: 'OpenAI 키가 있으면 감정·입력을 담아 새 문장을 생성하고, 없으면 큐레이션 풀에서 선택한다.' },
+    { step: '전달 · 저장', detail: '채팅 형태로 한 문장씩 건네고, 저장 요청 시 localStorage(warm_saved)에 보관한다.' },
+  ],
+  promptNotes: [
+    '고른 기분과 한 줄 입력을 담아 자기 연민(self-compassion) 결의 따뜻한 위로 문장을 생성하도록 system 프롬프트로 지시한다.',
+    'API 키가 없으면 감정별로 손질한 문구 풀에서 무작위로 골라 항상 응답한다(서버 전송 없음).',
+  ],
+  architecture:
+    '백엔드 없는 React SPA. 공통 레이아웃·5탭은 src/ui.tsx, 위로 기능은 src/App.tsx가 담당한다. ' +
+    'OpenAI 호출은 src/lib/ai.ts(선택)이며, 대화·저장 문장은 서버 없이 브라우저 localStorage에만 보관한다.',
+  structure: [
+    { path: 'src/App.tsx', desc: '기분 선택·위로 챗·마음 저장함 + 메타(M)' },
+    { path: 'src/ui.tsx', desc: '공통 레이아웃·5탭·UI 헬퍼' },
+    { path: 'src/lib/ai.ts', desc: 'OpenAI chat 헬퍼(선택 위로 생성)' },
+    { path: 'src/index.css', desc: '테마·채팅 스타일' },
+  ],
+  dataModel: [
+    { name: 'Mood', desc: '기분 종류(지침·슬픔·불안·외로움 등)' },
+    { name: 'Line', desc: '채팅 메시지(위로/격려 한 줄)' },
+    { name: '저장', desc: '저장한 문장. localStorage "warm_saved"' },
+  ],
+  deploy:
+    'Vite 빌드(base: "./") 후 GitHub Actions(deploy.yml)가 main push 시 GitHub Pages로 자동 배포 → aebonlee.github.io/project16/',
   stack: ['React 18', 'TypeScript', 'Vite', 'localStorage', 'OpenAI(선택)'],
 };
 
